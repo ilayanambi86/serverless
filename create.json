@@ -1,0 +1,10 @@
+{
+  "operation": "create",
+  "payload": {
+    "TableName": "BookStore",
+    "Item": {
+      "BookName": "Serverless Design",
+      "author": "Ilayanambi Ponramu"
+    }
+  }
+}
