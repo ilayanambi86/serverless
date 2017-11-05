@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Book Store</title>
+<link href="styles.css" rel="stylesheet" type="text/css" />
+<!-- Copy Start -->
+<script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" src="lib/url-template/url-template.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" src="apigClient.js"></script>
+<!-- Copy End -->
+<script>
+	var apigClient = apigClientFactory.newClient();
+
+	function addBook(obj){
+		var bookName = document.forms[0].elements['bookName'].value;
+
+		if(bookName && bookName.length > 0) {
+			var params = {
+			};
+			var body = {
+			  "operation": "create",
+			  "payload": {
+				"TableName": "BookStore",
+				"Item": {
+				  "BookName": bookName,
+				  "author": "Ilayanambi Ponramu"
+				}
+			  }
+			};
+			var additionalParams = {
+				headers: {
+				},
+				queryParams: {
+				}
+			};
+
+			apigClient.bookstoreapiPost(params, body, additionalParams)
+				.then(function(result){
+					alert('Book Added Successfully!!');
+				}).catch( function(result){
+					alert('Error occured while posting data');
+				});
+		} else {
+			alert('BookName is empty!!');
+		}
+	}
+
+	function searchBook(obj){
+		var bookName = document.forms[1].elements['bookName'].value;
+
+		if(bookName && bookName.length > 0) {
+			var params = {
+			};
+			var body = {
+			  "operation": "read",
+			  "payload": {
+				"TableName": "BookStore",
+				"Key": {
+				  "BookName": bookName
+				}
+			  }
+			};
+			var additionalParams = {
+				headers: {
+				},
+				queryParams: {
+				}
+			};
+			document.getElementById("result").innerHTML = "";
+			apigClient.bookstoreapiPost(params, body, additionalParams)
+				.then(function(result){
+					document.getElementById("result").innerHTML = "<center><span><b>BookName: </b></span>"+result.data.Item.BookName+"<br\><span><b>Author: </b></span>"+result.data.Item.author+"</center>";
+				}).catch( function(result){
+					document.getElementById("result").innerHTML = "<center><span><b>Book "+bookName+" not found.</b></span></center>";
+				});
+		} else {
+			alert('BookName is empty!!');
+		}
+	}
+</script>
+</head>
+<body>
+<div id="container">
+    <div id="header">
+    	<div class="logoContainer">
+        	<div class="logo">Book <span>store</span></div>
+        </div>
+    	<div id="navcontainer">
+        	<ul id="navlist">
+            	<li id="active"><a href="">HOME</a></li>
+                <li><a href="">ABOUT</a></li>
+                <li><a href="">MARKET</a></li>
+                <li><a href="">VACATION</a></li>
+                <li><a href="">BLOG</a></li>
+                <li><a href="">PHOTOS</a></li>
+                <li><a href="">CONTACT</a></li>
+            </ul>
+            <div class="clearfloat"></div>
+        </div>
+    	<div class="picHeader">
+        	<div class="picHeaderBody">
+
+            </div>
+        </div>
+    </div>
+    <div id="sidebar1">
+    	<h2>Books Today</h2>
+        <div class="bookBox">
+        	<div class="boxBook"><img src="images/pic3.jpg" alt="" /></div>
+            <div>
+            	<b>JavaScript: The Missing Manual</b> has been the industry's standard
+            </div>
+            <input type="button" value="Details and Buy!" class="smallButton" /><span>$24.00</span>
+            <div class="clearfloat"></div>
+        </div>
+    </div>
+    <div id="mainContent">
+    	<h1>Add Book</h1>
+    	<pre>
+    	<form>
+    		BookName: <input type="text" name="bookName" />&nbsp;&nbsp;<input type="button" value="Add" onClick="javascript:addBook(this);"/>
+    	</form>
+    	</pre>
+    	<h1>Search Book</h1>
+    	<pre>
+    	<form>
+    		BookName: <input type="text" name="bookName" />&nbsp;&nbsp;<input type="button" value="Search" onClick="javascript:searchBook(this);"/>
+    	</form>
+    	<div id="result" style="background-color:#FFFF00;"></div>
+    	</pre>
+    </div>
+    <div id="footer">
+		<p>
+        	Terms of Use | <a title="This page validates as XHTML 1.0 Strict" href="http://validator.w3.org/check/referer" class="footerLink"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> |
+        <a title="This page validates as CSS" href="http://jigsaw.w3.org/css-validator/check/referer" class="footerLink"><abbr title="Cascading Style Sheets">CSS</abbr></a>
+        </p>
+	</div>
+</div>
+</body>
+</html>
